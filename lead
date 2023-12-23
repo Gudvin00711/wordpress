@@ -1,0 +1,87 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class SimpleNotepad {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Выберите действие:");
+            System.out.println("1. Открыть файл");
+            System.out.println("2. Создать новый файл");
+            System.out.println("3. Записать в файл");
+            System.out.println("4. Выход");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Чтобы прочитать символ новой строки после nextInt()
+
+            switch (choice) {
+                case 1:
+                    openFile();
+                    break;
+                case 2:
+                    createNewFile();
+                    break;
+                case 3:
+                    writeToFile();
+                    break;
+                case 4:
+                    System.out.println("Программа завершена.");
+                    System.exit(0);
+                default:
+                    System.out.println("Неверный выбор. Попробуйте еще раз.");
+            }
+        }
+    }
+
+    private static void openFile() {
+        System.out.println("Введите путь к файлу для открытия:");
+        Scanner scanner = new Scanner(System.in);
+        String filePath = scanner.nextLine();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            System.out.println("Содержимое файла:");
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка при открытии файла: " + e.getMessage());
+        }
+    }
+
+    private static void createNewFile() {
+        System.out.println("Введите путь к новому файлу:");
+        Scanner scanner = new Scanner(System.in);
+        String filePath = scanner.nextLine();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            System.out.println("Файл успешно создан.");
+        } catch (IOException e) {
+            System.out.println("Ошибка при создании файла: " + e.getMessage());
+        }
+    }
+
+    private static void writeToFile() {
+        System.out.println("Введите путь к файлу для записи:");
+        Scanner scanner = new Scanner(System.in);
+        String filePath = scanner.nextLine();
+
+        System.out.println("Введите текст для записи в файл (для завершения введите 'exit'):");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            String line;
+            while (!(line = scanner.nextLine()).equals("exit")) {
+                writer.write(line + "\n");
+            }
+            System.out.println("Текст успешно записан в файл.");
+        } catch (IOException e) {
+            System.out.println("Ошибка при записи в файл: " + e.getMessage());
+        }
+    }
+}
